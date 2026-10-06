@@ -1,0 +1,127 @@
+/* =====================================================================
+   RESUME PAGE
+   Builds on style.css (top bar, ledger rows, buttons, colors).
+   The second half is the PRINT layout: open resume.html in Chrome,
+   press Ctrl+P (Cmd+P on Mac) and choose "Save as PDF" to make a new
+   PDF any time you update the resume. Turn off "Headers and footers".
+   ===================================================================== */
+
+.resume .row-body { gap: 20px; padding-block: 32px 36px; }
+.resume-head { gap: 18px !important; padding-top: 24px !important; }
+.resume h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); }
+.role { font-size: 1.1rem; color: var(--ink-2); margin-top: 10px; }
+
+.contact-row {
+  display: flex; flex-wrap: wrap; gap: 6px 0;
+  font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-2);
+}
+.contact-row li { padding-right: 14px; margin-right: 14px; border-right: 1px solid var(--line); min-width: 0; overflow-wrap: anywhere; }
+.contact-row li:last-child { border-right: 0; }
+.contact-row a { text-decoration: none; }
+.contact-row a:hover { color: var(--accent); }
+.actions { margin-top: 4px; }
+
+/* Section labels on the resume are smaller than homepage headlines */
+.r-head {
+  font-size: 0.8rem !important;
+  font-family: var(--font-mono) !important;
+  font-variation-settings: normal !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);
+}
+.summary { max-width: 70ch; font-size: 1.05rem; color: var(--ink); }
+
+/* Experience: dates in a narrow left column, like a frozen spreadsheet column */
+.jobs { display: flex; flex-direction: column; border: 1px solid var(--line); background: var(--panel); }
+.job {
+  display: grid; grid-template-columns: 180px minmax(0, 1fr);
+  border-bottom: 1px solid var(--line);
+}
+.job:last-child { border-bottom: 0; }
+.job-when {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 18px 16px; border-right: 1px solid var(--line); background: var(--panel-2);
+  font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.job-when .dur { color: var(--muted); font-size: 0.72rem; }
+.job-body { padding: 18px 20px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.job h3 { font-size: 1.1rem; font-weight: 700; }
+.org { font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+.job ul { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+.job li {
+  position: relative; padding-left: 18px; color: var(--ink-2); font-size: 0.95rem; max-width: 75ch;
+}
+.job li::before { content: "▸"; position: absolute; left: 0; color: var(--accent); }
+.case-links { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); margin-top: 6px; }
+.case-links a { color: var(--accent); }
+
+/* Skills: label / value rows */
+.skillgrid { border: 1px solid var(--line); background: var(--panel); }
+.skillgrid div {
+  display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 16px;
+  padding: 12px 16px; border-bottom: 1px solid var(--line);
+}
+.skillgrid div:last-child { border-bottom: 0; }
+.skillgrid dt { font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding-top: 2px; }
+.skillgrid dd { color: var(--ink-2); font-size: 0.95rem; }
+.cert b { font-weight: 600; }
+
+.sb-link { padding: 6px 12px; border-right: 1px solid var(--line); text-decoration: none; color: var(--ink-2); }
+.sb-link:hover { color: var(--ink); }
+.nav a[aria-current="page"] { color: var(--accent); border-color: var(--accent); }
+
+@media (max-width: 640px) {
+  .job { grid-template-columns: minmax(0, 1fr); }
+  .job-when { flex-direction: row; justify-content: space-between; border-right: 0; border-bottom: 1px solid var(--line); padding: 10px 16px; }
+  .skillgrid div { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .contact-row li { border-right: 0; margin-right: 0; width: 100%; }
+}
+
+/* =====================================================================
+   PRINT / PDF LAYOUT
+   Plain, single column, black on white, so it reads well on paper and
+   in applicant tracking systems.
+   ===================================================================== */
+@page { size: Letter; margin: 0.5in 0.6in; }
+
+@media print {
+  :root, :root[data-theme] {
+    --bg: #ffffff; --panel: #ffffff; --panel-2: #ffffff;
+    --ink: #111216; --ink-2: #2b2c33; --muted: #55566a;
+    --line: #c9cad3; --accent: #7a4500;
+    color-scheme: light;
+  }
+  body { font-size: 9.6pt; line-height: 1.42; background: #ffffff; }
+  .topbar, .colstrip, .row-num, .statusbar, .fx, .actions, .no-print { display: none !important; }
+  .sheet { padding: 0; max-width: none; }
+  .row { display: block; border-bottom: 0; }
+  .resume .row-body { padding: 0 0 10pt !important; gap: 6pt !important; }
+  .resume-head { padding: 0 0 6pt !important; border-bottom: 1.5pt solid var(--ink); margin-bottom: 10pt; }
+  .resume h1 { font-size: 24pt; font-variation-settings: "wdth" 110; }
+  .role { font-size: 11pt; margin-top: 2pt; color: var(--ink-2); }
+  .contact-row { font-size: 8pt; }
+  .contact-row li { padding-right: 6pt; margin-right: 6pt; }
+  .resume h1, .job h3 { font-variation-settings: normal; }
+  .r-head { font-size: 8.4pt !important; border-bottom: 0.75pt solid var(--line); padding-bottom: 2pt; }
+  .summary { font-size: 9.8pt; max-width: none; }
+  .jobs, .skillgrid { border: 0; background: none; }
+  .job { display: grid; grid-template-columns: 1.35in minmax(0, 1fr); border: 0; break-inside: avoid; padding: 3pt 0 5pt; }
+  .job-when { background: none; border: 0; padding: 1pt 0 0; font-size: 8pt; white-space: nowrap; }
+  .job-body { padding: 0; gap: 1pt; }
+  .job h3 { font-size: 10.5pt; }
+  .org { font-size: 8.2pt; }
+  .job ul { gap: 1.5pt; margin-top: 2pt; }
+  .job li { font-size: 9.4pt; max-width: none; padding-left: 11pt; }
+  .skillgrid div { grid-template-columns: 1.5in minmax(0, 1fr); padding: 2pt 0; border: 0; gap: 8pt; break-inside: avoid; }
+  .skillgrid dt { font-size: 7.8pt; padding-top: 1pt; }
+  .skillgrid dd { font-size: 9.2pt; }
+  a { color: inherit; text-decoration: none; }
+}
+
+/* Certification row with a small certificate preview */
+.cert-row { display: flex; flex-wrap: wrap; gap: 20px 32px; align-items: flex-start; }
+.cert-text { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.cert-thumb { display: block; width: 240px; max-width: 100%; border: 1px solid var(--line); background: var(--panel); padding: 6px; transition: border-color .15s ease; }
+.cert-thumb:hover { border-color: var(--accent); }
+.cert-thumb img { display: block; width: 100%; height: auto; }

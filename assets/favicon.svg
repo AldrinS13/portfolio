@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#14151c"/>
+  <rect x="5" y="13" width="54" height="38" fill="none" stroke="#f2a93b" stroke-width="4"/>
+  <text x="32" y="41" text-anchor="middle" font-family="Menlo, Consolas, monospace" font-size="22" font-weight="700" fill="#f2a93b">A1</text>
+</svg>

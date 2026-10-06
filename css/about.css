@@ -1,0 +1,71 @@
+/* =====================================================================
+   ABOUT PAGE
+   Builds on style.css. The story is laid out as "save files": a narrow
+   left column with the save number and years, and the chapter on the right.
+   ===================================================================== */
+
+.about-intro {
+  display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 40px; align-items: end;
+}
+.about-intro .eyebrow { margin-bottom: 12px; }
+.about h1 { font-size: clamp(2.4rem, 6.4vw, 4.6rem); }
+.about-intro .player { justify-self: end; width: 100%; }
+
+/* ---------- Save files (story chapters) ---------- */
+.saves { border: 1px solid var(--line); background: var(--panel); }
+.saves > li {
+  display: grid; grid-template-columns: 170px minmax(0, 1fr);
+  border-bottom: 1px solid var(--line);
+}
+.saves > li:last-child { border-bottom: 0; }
+.save-when {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 20px 16px; border-right: 1px solid var(--line); background: var(--panel-2);
+  font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted);
+}
+.save-no { font-family: var(--font-pixel); font-size: 0.75rem; color: var(--ink-2); letter-spacing: 0.04em; }
+.save-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.save-body h3 { font-size: 1.15rem; font-weight: 700; }
+.save-body p { color: var(--ink-2); max-width: 66ch; }
+.save-link a { font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent); text-decoration: none; }
+.save-link a:hover { text-decoration: underline; }
+.saves > li.current .save-when { background: var(--accent); color: var(--accent-ink); }
+.saves > li.current .save-no { color: var(--accent-ink); }
+.saves > li.current h3 { color: var(--accent); }
+
+/* ---------- Rules of play (how I work) ---------- */
+.rules { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.rules li {
+  border: 1px solid var(--line); background: var(--panel);
+  padding: 18px; display: flex; flex-direction: column; gap: 8px; min-width: 0;
+}
+.rule-key {
+  align-self: flex-start;
+  font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--accent); border: 1px solid var(--accent); padding: 2px 8px;
+}
+.rules h3 { font-size: 1.05rem; font-weight: 700; }
+.rules p { color: var(--ink-2); font-size: 0.95rem; }
+
+/* ---------- Character ---------- */
+.me-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 40px; align-items: start; }
+.me-text { display: flex; flex-direction: column; gap: 14px; max-width: 60ch; }
+.me-text p { color: var(--ink-2); }
+.me-text p:first-child { color: var(--ink); font-size: 1.1rem; }
+
+/* Status bar links (shared look with the resume page) */
+.sb-link { padding: 6px 12px; border-right: 1px solid var(--line); text-decoration: none; color: var(--ink-2); }
+.sb-link:hover { color: var(--ink); }
+.nav a[aria-current="page"] { color: var(--accent); border-color: var(--accent); }
+
+@media (max-width: 960px) {
+  .about-intro, .me-grid { grid-template-columns: minmax(0, 1fr); }
+  .about-intro .player { justify-self: start; max-width: 340px; }
+}
+@media (max-width: 640px) {
+  .saves > li { grid-template-columns: minmax(0, 1fr); }
+  .save-when { flex-direction: row; justify-content: space-between; border-right: 0; border-bottom: 1px solid var(--line); padding: 10px 16px; }
+  .save-body { padding: 16px; }
+  .rules { grid-template-columns: minmax(0, 1fr); }
+}

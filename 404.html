@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Page not found · Aldrin Sanes</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="https://aldrins13.github.io/portfolio/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=JetBrains+Mono:wght@400;500&display=swap">
+<!--
+  GitHub Pages shows this page for any address that doesn't exist.
+  It can appear at any folder depth, so its styles are inline and its
+  links use the full site address (see README if you change domains).
+-->
+<style>
+  :root {
+    --bg: #14151c; --panel: #1c1d26; --panel-2: #24252f; --ink: #ece8df; --ink-2: #b9b5c6;
+    --muted: #8a879a; --line: #30313f; --accent: #f2a93b; --accent-ink: #1a1205; --bad: #ff8a7a;
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #e9eaee; --panel: #f6f6f8; --panel-2: #dfe0e6; --ink: #17181f; --ink-2: #3c3d4a;
+      --muted: #5f6070; --line: #c4c5d0; --accent: #945400; --accent-ink: #fff8ec; --bad: #b3261e;
+      color-scheme: light;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #e9eaee; --panel: #f6f6f8; --panel-2: #dfe0e6; --ink: #17181f; --ink-2: #3c3d4a;
+    --muted: #5f6070; --line: #c4c5d0; --accent: #945400; --accent-ink: #fff8ec; --bad: #b3261e;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: grid; place-items: center;
+    background: var(--bg); color: var(--ink);
+    font-family: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    padding-inline: 16px; padding-block: 48px;
+  }
+  .card { width: 100%; max-width: 560px; border: 1px solid var(--line); background: var(--panel); }
+  .fx { display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--line); font: 400 0.85rem "JetBrains Mono", ui-monospace, Menlo, monospace; }
+  .fx span { padding: 8px 12px; border-right: 1px solid var(--line); }
+  .fx .ref { color: var(--muted); }
+  .fx .ico { color: var(--accent); font-style: italic; }
+  .fx code { padding: 8px 12px; font: inherit; overflow-wrap: anywhere; }
+  .body { padding: 28px 24px 24px; display: flex; flex-direction: column; gap: 14px; }
+  .err { font: 500 0.85rem "JetBrains Mono", ui-monospace, monospace; color: var(--bad); }
+  h1 { margin: 0; font-size: clamp(2.6rem, 10vw, 4rem); font-weight: 900; font-variation-settings: "wdth" 125; line-height: 0.95; color: var(--bad); }
+  p { margin: 0; color: var(--ink-2); line-height: 1.6; }
+  .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+  a { font: 500 0.85rem "JetBrains Mono", ui-monospace, monospace; text-decoration: none; padding: 10px 16px; border: 1px solid var(--ink); color: var(--ink); }
+  a.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+</style>
+</head>
+<body>
+  <main class="card">
+    <div class="fx" aria-hidden="true"><span class="ref">A1</span><span class="ico">fx</span><code>=VLOOKUP(this_page, site, 2, FALSE)</code></div>
+    <div class="body">
+      <span class="err">Error 404</span>
+      <h1>#REF!</h1>
+      <p>This page doesn't exist. The link may be old, or the address may have a typo.</p>
+      <div class="links">
+        <a class="primary" href="https://aldrins13.github.io/portfolio/">Go to the homepage</a>
+        <a href="https://aldrins13.github.io/portfolio/#work">See the case files</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

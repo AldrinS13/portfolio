@@ -1,0 +1,473 @@
+<!doctype html><html lang="en"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><title>HC Time Log Audit Tool · Case Study · Aldrin Sanes</title>
+<!-- META:START  search + link-preview tags (to change the site address, see README) -->
+<meta name="description" content="Case study: a Google Sheets audit tool that reconciles health coach time logs against the official record and flags only the exceptions.">
+<link rel="canonical" href="https://aldrins13.github.io/portfolio/work/hc-time-log-audit-tool.html">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta name="theme-color" content="#14151c">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Aldrin Sanes">
+<meta property="og:title" content="HC Time Log Audit Tool · Case Study · Aldrin Sanes">
+<meta property="og:description" content="Case study: a Google Sheets audit tool that reconciles health coach time logs against the official record and flags only the exceptions.">
+<meta property="og:url" content="https://aldrins13.github.io/portfolio/work/hc-time-log-audit-tool.html">
+<meta property="og:image" content="https://aldrins13.github.io/portfolio/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aldrin Sanes portfolio: &quot;I find out why the numbers are wrong.&quot; Data &amp; Reporting Specialist building toward software.">
+<meta name="twitter:card" content="summary_large_image">
+<!-- META:END -->
+</head><body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: one reading column; the mock report is the single framed exhibit.
+   Palette: cool paper + ink, one blue accent, separate semantic status colors.
+   Type: Archivo for words, JetBrains Mono for data and keys (shared portfolio type). */
+/* Portfolio palette: dark by default, light when the visitor or system asks for it */
+:root {
+  --bg: #14151c;
+  --surface: #1c1d26;
+  --ink: #ece8df;
+  --ink2: #b9b5c6;
+  --muted: #8a879a;
+  --line: #30313f;
+  --accent: #f2a93b;
+  --accent-soft: #3a2a12;
+  --good: #6fcf97;
+  --good-bg: #173326;
+  --warn: #e8c547;
+  --warn-bg: #3a3212;
+  --bad: #ff8a7a;
+  --bad-bg: #3a1c18;
+  --head-bg: #24252f;
+  --c-bg: #14151c;
+  --c-panel: #1c1d26;
+  --c-panel2: #24252f;
+  --c-ink: #ece8df;
+  --c-ink2: #b9b5c6;
+  --c-muted: #8a879a;
+  --c-line: #30313f;
+  --c-accent: #f2a93b;
+  --font-ui: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-data: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+  --bg: #e9eaee;
+  --surface: #f6f6f8;
+  --ink: #17181f;
+  --ink2: #3c3d4a;
+  --muted: #5f6070;
+  --line: #c4c5d0;
+  --accent: #945400;
+  --accent-soft: #f4e2c4;
+  --good: #1e7a4a;
+  --good-bg: #dbefe2;
+  --warn: #7a5d00;
+  --warn-bg: #f5ecc4;
+  --bad: #b3261e;
+  --bad-bg: #f8e0dd;
+  --head-bg: #dfe0e6;
+  --c-bg: #e9eaee;
+  --c-panel: #f6f6f8;
+  --c-panel2: #dfe0e6;
+  --c-ink: #17181f;
+  --c-ink2: #3c3d4a;
+  --c-muted: #5f6070;
+  --c-line: #c4c5d0;
+  --c-accent: #945400;
+  color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #e9eaee;
+  --surface: #f6f6f8;
+  --ink: #17181f;
+  --ink2: #3c3d4a;
+  --muted: #5f6070;
+  --line: #c4c5d0;
+  --accent: #945400;
+  --accent-soft: #f4e2c4;
+  --good: #1e7a4a;
+  --good-bg: #dbefe2;
+  --warn: #7a5d00;
+  --warn-bg: #f5ecc4;
+  --bad: #b3261e;
+  --bad-bg: #f8e0dd;
+  --head-bg: #dfe0e6;
+  --c-bg: #e9eaee;
+  --c-panel: #f6f6f8;
+  --c-panel2: #dfe0e6;
+  --c-ink: #17181f;
+  --c-ink2: #3c3d4a;
+  --c-muted: #5f6070;
+  --c-line: #c4c5d0;
+  --c-accent: #945400;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-ui); font-size: 16px; line-height: 1.6;
+  padding-inline: 16px; padding-block: 40px 72px;
+}
+.wrap { max-width: 980px; margin-inline: auto; display: flex; flex-direction: column; gap: 56px; }
+h1, h2, h3, p, ul, ol, dl { margin: 0; }
+h1 { font-size: clamp(2.1rem, 6vw, 3.3rem); line-height: 1.05; font-weight: 700; letter-spacing: -0.02em; text-wrap: balance; }
+h2 { font-size: 1.4rem; line-height: 1.2; font-weight: 650; letter-spacing: -0.01em; text-wrap: balance; }
+h3 { font-size: 1rem; font-weight: 650; }
+.label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); }
+.lede { font-size: 1.2rem; line-height: 1.5; color: var(--ink2); max-width: 62ch; }
+.sec { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.sec > p { max-width: 68ch; color: var(--ink2); }
+code, .mono { font-family: var(--font-data); font-size: 0.88em; }
+
+/* header */
+.head { display: flex; flex-direction: column; gap: 18px; }
+.meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px 24px; padding-top: 20px; border-top: 1px solid var(--line); }
+.meta div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.meta dd { margin: 0; font-weight: 500; }
+
+/* three-up summary */
+.trio { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 28px; }
+.trio > div { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.trio p { color: var(--ink2); }
+
+/* KPI tiles */
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.kpi .n { font-family: var(--font-data); font-size: 2rem; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
+.kpi .t { font-size: 0.85rem; color: var(--ink2); display: flex; align-items: center; gap: 6px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.dot.good { background: var(--good); } .dot.warn { background: var(--warn); } .dot.bad { background: var(--bad); } .dot.neutral { background: var(--muted); }
+.note { font-size: 0.85rem; color: var(--muted); }
+
+/* mock report exhibit */
+.exhibit { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.exhibit-bar { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--line); background: var(--head-bg); }
+.exhibit-bar .title { font-weight: 650; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.filter { font-size: 0.8rem; border: 1px solid var(--line); background: var(--surface); border-radius: 4px; padding: 3px 10px; color: var(--ink2); }
+.filter b { color: var(--ink); font-weight: 600; }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 860px; font-size: 0.85rem; }
+th, td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
+thead th { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); background: var(--surface); }
+thead tr.groups th { text-align: center; color: var(--ink); letter-spacing: 0.08em; border-bottom: 1px solid var(--line); }
+.g-tl { background: var(--accent-soft); }
+.g-tc { background: var(--head-bg); }
+td.d { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+td.num { text-align: right; }
+td.sep, th.sep { border-left: 2px solid var(--line); }
+td.dim { color: var(--muted); text-align: center; }
+tbody tr:last-child td { border-bottom: 0; }
+td.flag { color: var(--bad); font-weight: 600; }
+.pill { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 0.8rem; border-radius: 999px; padding: 2px 10px 2px 4px; }
+.pill i { font-style: normal; width: 18px; height: 18px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 0.72rem; font-weight: 700; color: #fff; }
+.pill.good { background: var(--good-bg); color: var(--good); } .pill.good i { background: var(--good); }
+.pill.warn { background: var(--warn-bg); color: var(--warn); } .pill.warn i { background: var(--warn); }
+.pill.bad { background: var(--bad-bg); color: var(--bad); } .pill.bad i { background: var(--bad); }
+:root[data-theme="dark"] .pill i { color: #0E141B; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .pill i { color: #0E141B; } }
+.sub { display: block; font-size: 0.72rem; font-weight: 500; color: var(--muted); margin-top: 2px; padding-left: 4px; }
+.exhibit-foot { padding: 10px 16px; border-top: 1px solid var(--line); font-size: 0.8rem; color: var(--muted); }
+
+/* pipeline */
+.steps { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; counter-reset: s; }
+.steps li { counter-increment: s; display: flex; flex-direction: column; gap: 6px; padding-top: 14px; border-top: 3px solid var(--accent); min-width: 0; }
+.steps li::before { content: "Step " counter(s); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; color: var(--accent); }
+.steps p { color: var(--ink2); font-size: 0.95rem; }
+.key { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.key .k { font-family: var(--font-data); font-size: clamp(0.85rem, 2.6vw, 1.1rem); overflow-wrap: anywhere; }
+.key .k span { padding: 1px 4px; border-radius: 3px; }
+.k1 { background: var(--accent-soft); } .k2 { background: var(--good-bg); } .k3 { background: var(--warn-bg); } .k4 { background: var(--head-bg); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 0.85rem; color: var(--ink2); }
+
+/* lists */
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px; }
+.cols > div { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.cols ul, .plain { padding-left: 1.1rem; display: flex; flex-direction: column; gap: 6px; color: var(--ink2); }
+.cols li::marker, .plain li::marker { color: var(--accent); }
+
+/* problems table */
+.pt { min-width: 720px; }
+.pt td { white-space: normal; vertical-align: top; min-width: 0; }
+.pt td:first-child { font-weight: 600; width: 28%; }
+.pt td:nth-child(2) { color: var(--ink2); width: 32%; }
+.pt td:nth-child(3) { color: var(--ink2); }
+.pt thead th { background: var(--bg); }
+.tablebox { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); overflow-x: auto; }
+
+/* decisions */
+.dec { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+.dec > div { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.dec p { color: var(--ink2); font-size: 0.95rem; }
+
+/* chips */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; }
+.chips li { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 4px 14px; font-size: 0.9rem; }
+
+.foot { border-top: 1px solid var(--line); padding-top: 20px; color: var(--muted); font-size: 0.85rem; display: flex; flex-direction: column; gap: 6px; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+<link rel="stylesheet" href="../css/case.css">
+<header class="site-top">
+  <div class="site-top-inner">
+    <a class="site-brand" href="../index.html"><span class="cell">A1</span>Aldrin Sanes</a>
+    <span class="site-crumb">/ Case files / HC Time Log Audit Tool</span>
+    <nav class="site-nav" aria-label="Main">
+      <a href="../index.html#work">Work</a>
+      <a href="../about.html">About</a>
+      <a href="../index.html#log">Learning</a>
+      <a href="../resume.html">Resume</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+    <button class="theme-btn" id="theme-toggle" type="button" aria-label="Switch color theme">◐ Theme</button>
+  </div>
+</header>
+
+
+<main class="wrap">
+
+  <header class="head">
+    <span class="label">Case study · Data QA · Google Sheets</span>
+    <h1>HC Time Log Audit Tool</h1>
+    <p class="lede">A reconciliation tool that checks every health coach's time log entry against the official care-platform record, so QA no longer compares them by hand.</p>
+    <dl class="meta" style="margin:0">
+      <div><dt class="label">Role</dt><dd>Data, Reporting &amp; Admin Analyst</dd></div>
+      <div><dt class="label">Built in</dt><dd>Google Sheets, no add-ons</dd></div>
+      <div><dt class="label">Scale</dt><dd>About 50 coaches, tens of thousands of rows</dd></div>
+      <div><dt class="label">Status</dt><dd>In use by QA; Date Validator in progress</dd></div>
+    </dl>
+  </header>
+
+  <section class="sec" aria-labelledby="glance">
+    <h2 id="glance" class="label" style="font-size:.75rem">At a glance</h2>
+    <div class="trio">
+      <div>
+        <h3>The problem</h3>
+        <p>Coaches log time twice: in the care platform (TC), the official system, and in a personal Time Log tracker. QA checked the two entry by entry. It was slow, and mismatches were easy to miss.</p>
+      </div>
+      <div>
+        <h3>The solution</h3>
+        <p>Paste each day's exports into the sheet. The tool pairs every entry across both systems and flags what is missing, mistimed or inconsistent. Filters narrow it by coach, clinic or status.</p>
+      </div>
+      <div>
+        <h3>The outcome</h3>
+        <p>A full day of about 340 entries is reconciled in one view. Early tests matched over 97% of entries automatically, leaving QA only the exceptions.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="results">
+    <h2 id="results">One verified test day</h2>
+    <div class="kpis">
+      <div class="kpi"><span class="n">336</span><span class="t"><span class="dot neutral"></span>Entries reconciled</span></div>
+      <div class="kpi"><span class="n">275</span><span class="t"><span class="dot good"></span>Matched</span></div>
+      <div class="kpi"><span class="n">57</span><span class="t"><span class="dot warn"></span>Needs review</span></div>
+      <div class="kpi"><span class="n">6</span><span class="t"><span class="dot bad"></span>Missing in TC</span></div>
+      <div class="kpi"><span class="n">7</span><span class="t"><span class="dot bad"></span>Missing in Time Log</span></div>
+    </div>
+    <p class="note">Counts are from one test date, after the bug fixes listed below. They are aggregate totals with no identifying details.</p>
+  </section>
+
+  <section class="sec" aria-labelledby="report">
+    <h2 id="report">What the report looks like</h2>
+    <p>Each row puts the coach's Time Log entry next to the care-platform entry, so a flagged row can be understood without opening the raw data.</p>
+    <div class="exhibit">
+      <div class="exhibit-bar">
+        <span class="title">Audit Report</span>
+        <div class="filters" aria-label="Sample filters">
+          <span class="filter">Report date <b>09/25/2026</b></span>
+          <span class="filter">Health coach <b>All</b></span>
+          <span class="filter">Clinic <b>All</b></span>
+          <span class="filter">Status <b>All</b></span>
+        </div>
+      </div>
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr class="groups">
+              <th colspan="2"></th>
+              <th colspan="4" class="g-tl sep">Time Log</th>
+              <th colspan="4" class="g-tc sep">Care platform</th>
+              <th class="sep"></th>
+            </tr>
+            <tr>
+              <th>Coach</th><th>Date</th><th class="sep">Patient</th><th>EHR ID</th><th class="num">Min</th><th></th>
+              <th class="sep">Date</th><th>Patient</th><th>EHR ID</th><th class="num">Min</th><th class="sep">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Rivera, Alex</td><td class="d">09/25/2026</td>
+              <td class="sep">R. Delgado</td><td class="d">10442</td><td class="d num">5.20</td><td></td>
+              <td class="d sep">09/25/2026</td><td>R. Delgado</td><td class="d">10442</td><td class="d num">5.20</td>
+              <td class="sep"><span class="pill good"><i>✓</i>Matched</span></td>
+            </tr>
+            <tr>
+              <td>Rivera, Alex</td><td class="d">09/25/2026</td>
+              <td class="sep">T. Whitfield</td><td class="d">20817</td><td class="d num">15.33</td><td></td>
+              <td class="d sep">09/25/2026</td><td>T. Whitfield</td><td class="d">20817</td><td class="d num">15.33</td>
+              <td class="sep"><span class="pill good"><i>✓</i>Matched</span></td>
+            </tr>
+            <tr>
+              <td>Chen, Maya</td><td class="d">09/25/2026</td>
+              <td class="sep">L. Okafor</td><td class="d">31560</td><td class="d num">12.35</td><td></td>
+              <td class="d sep">09/25/2026</td><td>L. Okafor</td><td class="d">31560</td><td class="d num">10.80</td>
+              <td class="sep"><span class="pill warn"><i>!</i>Needs review</span><span class="sub">Time off by 1.55 min</span></td>
+            </tr>
+            <tr>
+              <td>Chen, Maya</td><td class="d">09/25/2026</td>
+              <td class="sep">P. Haldane</td><td class="d">44091</td><td class="d num">18.00</td><td></td>
+              <td class="d sep">09/25/2026</td><td>P. Haldane</td><td class="d">44091</td><td class="d num">11.40</td>
+              <td class="sep"><span class="pill warn"><i>!</i>Needs review</span><span class="sub">Time off by 6.60 min</span></td>
+            </tr>
+            <tr>
+              <td>Brooks, Sam</td><td class="d flag">09/23/2062</td>
+              <td class="sep">D. Moreau</td><td class="d">52377</td><td class="d num">9.70</td><td></td>
+              <td class="d sep">09/23/2026</td><td>D. Moreau</td><td class="d">52377</td><td class="d num">9.70</td>
+              <td class="sep"><span class="pill bad"><i>✕</i>Invalid date</span><span class="sub">Time Log year is 2062</span></td>
+            </tr>
+            <tr>
+              <td>Brooks, Sam</td><td class="d">09/25/2026</td>
+              <td class="sep">K. Ingram</td><td class="d">61204</td><td class="d num">7.10</td><td></td>
+              <td class="dim sep">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td>
+              <td class="sep"><span class="pill bad"><i>✕</i>Missing in TC</span></td>
+            </tr>
+            <tr>
+              <td>Park, Jo</td><td class="dim">—</td>
+              <td class="dim sep">—</td><td class="dim">—</td><td class="dim">—</td><td></td>
+              <td class="d sep">09/25/2026</td><td>S. Lindqvist</td><td class="d">70518</td><td class="d num">6.25</td>
+              <td class="sep"><span class="pill bad"><i>✕</i>Missing in Time Log</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="exhibit-foot">Sample data. All names, IDs and dates are fictional. The invalid-date row shows the Date Validator, which is still being built.</div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="how">
+    <h2 id="how">How it works</h2>
+    <ol class="steps">
+      <li><h3>Paste</h3><p>Each day's TC export and Time Log export go into two raw tabs, one day at a time.</p></li>
+      <li><h3>Normalize</h3><p>Coach usernames, clinic spellings and three different time formats are converted to one clean form.</p></li>
+      <li><h3>Match</h3><p>Each Time Log entry looks for its TC twin using a four-part key, then gets a status.</p></li>
+      <li><h3>Report</h3><p>One formula builds the filterable table, KPI totals and per-coach and per-clinic checks.</p></li>
+    </ol>
+    <div class="key">
+      <span class="label">The match key</span>
+      <div class="k"><span class="k1">arivera</span> | <span class="k2">10442</span> | <span class="k3">20260925</span> <span class="k4">#1</span></div>
+      <div class="legend"><span><span class="k1" style="padding:0 6px;border-radius:3px">coach</span> normalized username</span><span><span class="k2" style="padding:0 6px;border-radius:3px">patient</span> EHR ID</span><span><span class="k3" style="padding:0 6px;border-radius:3px">day</span> entry date</span><span><span class="k4" style="padding:0 6px;border-radius:3px">#1</span> visit counter for same-day repeats</span></div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="built">
+    <h2 id="built">What I built</h2>
+    <div class="cols">
+      <div>
+        <h3>Matching engine</h3>
+        <ul>
+          <li>Regex cleanup so TC usernames and Time Log emails resolve to the same coach</li>
+          <li>Minutes converter for three text formats</li>
+          <li>Visit counter that separates same-day repeat visits from visits on other days</li>
+          <li>Clinic Map and HC Roster tabs that standardize names</li>
+          <li>Three-tier time check: within 1 minute, within 3, beyond 3</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Report and views</h3>
+        <ul>
+          <li>Single filterable table with coach, clinic and status dropdowns</li>
+          <li>Day at a Glance summary</li>
+          <li>Entries by Clinic comparison, TC against Time Log</li>
+          <li>Selected Coach Check: entry counts and total minutes side by side</li>
+          <li>Side-by-side TC and Time Log columns for tracing a flag</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Safeguards</h3>
+        <ul>
+          <li>System Check light that warns when pasted data outruns the formulas</li>
+          <li>Date-first filtering so the sheet stays fast on large ranges</li>
+          <li>Known-answer test at every phase before moving on</li>
+          <li>Date Validator for mismatched or impossible dates (in progress)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="bugs">
+    <h2 id="bugs">Problems I traced and fixed</h2>
+    <p>Each one was diagnosed from what the sheet actually showed, then fixed on a single cell before copying down.</p>
+    <div class="tablebox">
+      <table class="pt">
+        <thead><tr><th>What went wrong</th><th>Root cause</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr><td>A real TC entry shown as Missing in TC</td><td>The match key had no date, so visit counters drifted across days for repeat patients.</td><td>Added the date to the key so counters restart each day.</td></tr>
+          <tr><td>Missing in TC for a patient who was in TC</td><td>The same patient had two different EHR IDs across the systems.</td><td>Traced it to source data entry, then added side-by-side columns so it shows at a glance.</td></tr>
+          <tr><td>Report stuck on an old date</td><td>New rows were pasted past the end of the formulas.</td><td>Extended the ranges and added the System Check warning.</td></tr>
+          <tr><td>Table cut off after row 9,000</td><td>The report formula kept an outdated row limit after the data grew.</td><td>Raised the limit and made it a checklist item.</td></tr>
+          <tr><td>16:35 counted as 16 hours</td><td>Two TC time formats looked alike.</td><td>Detect the format by counting colons, then convert.</td></tr>
+          <tr><td>Coaches not matching across systems</td><td>TC adds trailing digits to usernames.</td><td>Regex strips them before matching.</td></tr>
+          <tr><td>Coach names showing as emails</td><td>The lookup searched the wrong column.</td><td>Replaced it with INDEX/MATCH.</td></tr>
+          <tr><td>Flags for coaches with no log that day</td><td>Absence was treated as an error.</td><td>Added a separate no-activity status.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="decisions">
+    <h2 id="decisions">Design decisions</h2>
+    <div class="dec">
+      <div>
+        <h3>One formula builds the report</h3>
+        <p>Every column comes from the same filter, so rows can never drift out of line and the sheet stays fast. The trade-off is that new fields are added upstream, in the matching tab.</p>
+      </div>
+      <div>
+        <h3>Task Type left out of matching</h3>
+        <p>About 99% of TC entries carry the same category, so comparing it adds noise and no signal. This was a deliberate cut.</p>
+      </div>
+      <div>
+        <h3>Built live in Sheets, not converted</h3>
+        <p>A first Excel build broke when converted. Writing the formulas directly in Google Sheets removed that risk.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="skills">
+    <h2 id="skills">Skills shown</h2>
+    <ul class="chips">
+      <li>Data reconciliation</li>
+      <li>Google Sheets: FILTER, INDEX/MATCH, COUNTIFS, SUMIFS</li>
+      <li>Regex</li>
+      <li>Data quality profiling</li>
+      <li>Debugging from evidence</li>
+      <li>Test design</li>
+      <li>Report design</li>
+      <li>Process documentation</li>
+      <li>Stakeholder updates</li>
+    </ul>
+  </section>
+
+  <section class="sec" aria-labelledby="process">
+    <h2 id="process">How it was built</h2>
+    <p>I set the business rules, built the tool in phases and tested each phase against known-correct numbers before moving on. I used an AI assistant to draft formulas and step-by-step guides, and diagnosed each bug from what the sheet showed. Still open: testing across more days and finishing the Date Validator.</p>
+  </section>
+
+  <footer class="foot">
+    <span>All names, IDs, clinics and dates in the sample report are fictional. No real patient, coach or company data appears on this page.</span>
+  </footer>
+</main>
+
+<nav class="sheet-tabs" aria-label="Case files">
+  <a href="../index.html">Portfolio</a>
+  <a href="contractor-time-log-tracker.html">Contractor Tracker</a>
+  <a href="hc-time-log-audit-tool.html" aria-current="page">HC Audit Tool</a>
+  <a href="it-helpdesk-dashboard.html">IT Helpdesk</a>
+</nav>
+<script src="../js/main.js"></script>
+</body></html>
